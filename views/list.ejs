@@ -6,7 +6,18 @@
     <title>TODO List</title>
   </head>
   <body>
-    <p>It is <%= kindOfDay %></p>
-    <h1>No More Enjoyment! Just Work!</h1>
+    <h1><%= kindOfDay %>!</h1>
+    <ul>
+      <li>Buy Food</li>
+      <li>Cook Food</li>
+      <li>Eat Food</li>
+      <% itemList.map((item)=>{ %>
+      <li><%=item%></li>
+      <% }) %>
+    </ul>
+    <form action="/" method="post">
+      <input type="text" name="newItem" />
+      <button type="submit">Add</button>
+    </form>
   </body>
 </html>
