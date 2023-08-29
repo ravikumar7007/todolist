@@ -3,18 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
     <title>TODO List</title>
   </head>
   <body>
-    <h1><%= kindOfDay %>!</h1>
-    <ul>
+    <div class="box" id="heading">
+      <h1><%= kindOfDay %></h1>
+    </div>
+
+    <div class="box">
       <% itemList.map((item)=>{ %>
-      <li><%=item%></li>
+      <div class="item">
+        <input type="checkbox" />
+        <p><%=item%></p>
+      </div>
+
       <% }) %>
-    </ul>
-    <form action="/" method="post">
-      <input type="text" name="newItem" />
-      <button type="submit">Add</button>
-    </form>
+      <form class="item" action="/" method="post">
+        <input type="text" name="newItem" placeholder="New Item" />
+        <button type="submit">+</button>
+      </form>
+    </div>
   </body>
 </html>
