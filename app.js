@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 let items = ["Buy Food", "Cook Food", "Eat Food"];
+let workItems = [];
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
@@ -18,12 +19,20 @@ app.get("/", (req, res) => {
   };
   let today = current.toLocaleDateString("en-US", obj);
 
-  res.render("list", { kindOfDay: today, itemList: items });
+  res.render("list", { listTitle: today, itemList: items });
 });
 app.post("/", (req, res) => {
   let newItem = req.body.newItem;
-  items.push(newItem);
-  res.redirect("/");
+  if (req.body.submit === "Work") {
+    workItems.push(newItem);
+    res.redirect("/work");
+  } else {
+    items.push(newItem);
+    res.redirect("/");
+  }
+});
+app.get("/work", (req, res) => {
+  res.render("list", { listTitle: "Work", itemList: workItems });
 });
 app.listen(3000, () => {
   console.log("Server is listening on port 3000");
