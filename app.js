@@ -21,8 +21,13 @@ app.set("view engine", "ejs");
 const todoSchema = new mongoose.Schema({
   name: String,
 });
-
 const Item = mongoose.model("Item", todoSchema);
+
+const listSchema = new mongoose.Schema({
+  name: String,
+  list: [todoSchema],
+});
+const List = mongoose.model("List", listSchema);
 
 const item1 = new Item({
   name: "Welcome to Todo List",
@@ -65,12 +70,23 @@ app.post("/delete", async (req, res) => {
   res.redirect("/");
 });
 
-app.get("/:listName", (req, res) => {
+app.get("/:listName", async (req, res) => {
   const listName = req.params.listName;
+  let alreadyList = await List.findOne({ name: listName }).exec();
+  if (alreadyList === null) {
+    const newlist = new List({
+      name: listName,
+      list: defaultItem,
+    });
+    newlist.save();
+    alreadyList = newlist;
+  } else {
+    console.log(alreadyList);
+  }
 
   res.render("list", {
-    listTitle: listName.toUpperCase(),
-    itemList: workItems,
+    listTitle: alreadyList.name.toUpperCase(),
+    itemList: alreadyList.list,
   });
 });
 
