@@ -55,13 +55,23 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.post("/", (req, res) => {
+app.post("/", async (req, res) => {
+  const today = date.getDate();
+  const title = req.body.submit;
   const newItem = req.body.newItem;
   const item = new Item({
     name: newItem,
   });
-  item.save();
-  res.redirect("/");
+  if (title === today) {
+    item.save();
+    res.redirect("/");
+  } else {
+    let foundList = await List.findOne({ name: title }).exec();
+
+    foundList.list.push(item);
+    foundList.save();
+    res.redirect("/" + title);
+  }
 });
 app.post("/delete", async (req, res) => {
   console.log(req.body.checkbox);
@@ -80,12 +90,9 @@ app.get("/:listName", async (req, res) => {
     });
     newlist.save();
     alreadyList = newlist;
-  } else {
-    console.log(alreadyList);
   }
-
   res.render("list", {
-    listTitle: alreadyList.name.toUpperCase(),
+    listTitle: alreadyList.name,
     itemList: alreadyList.list,
   });
 });
