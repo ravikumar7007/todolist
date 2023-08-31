@@ -4,12 +4,13 @@
 </div>
 
 <div class="box">
-  <% itemList.map((item)=>{ %>
-  <div class="item">
-    <input type="checkbox" />
-    <p><%=item%></p>
-  </div>
-
+  <% itemList.forEach((item)=>{ %>
+  <form action="/delete" method="post">
+    <div class="item">
+      <input type="checkbox" />
+      <p><%=item.name%></p>
+    </div>
+  </form>
   <% }) %>
   <form class="item" action="/" method="post">
     <input
