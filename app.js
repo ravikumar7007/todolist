@@ -31,7 +31,7 @@ const item2 = new Item({
   name: "Press + to add in the list",
 });
 const item3 = new Item({
-  name: "Click here to delete",
+  name: "<-- Click here to delete",
 });
 const defaultItem = [item1, item2, item3];
 
@@ -41,13 +41,9 @@ app.get("/", async (req, res) => {
   let items = await Item.find({}).exec();
 
   if (items.length === 0) {
-    await Item.insertMany(defaultItem)
-      .then((res) => {
-        console.log("Success ");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    await Item.insertMany(defaultItem).then((res) => {
+      console.log("Success ");
+    });
     res.redirect("/");
   } else {
     res.render("list", { listTitle: today, itemList: items });
@@ -62,9 +58,20 @@ app.post("/", (req, res) => {
   item.save();
   res.redirect("/");
 });
+app.post("/delete", async (req, res) => {
+  console.log(req.body.checkbox);
+  const del = await Item.findByIdAndRemove(req.body.checkbox);
+  console.log(del);
+  res.redirect("/");
+});
 
-app.get("/work", (req, res) => {
-  res.render("list", { listTitle: "Work", itemList: workItems });
+app.get("/:listName", (req, res) => {
+  const listName = req.params.listName;
+
+  res.render("list", {
+    listTitle: listName.toUpperCase(),
+    itemList: workItems,
+  });
 });
 
 app.listen(3000, () => {

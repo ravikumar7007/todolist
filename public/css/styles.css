@@ -57,15 +57,22 @@ form.item {
 }
 
 button {
-  min-height: 50px;
-  width: 50px;
+  min-height: 45px;
+  width: 45px;
   border-radius: 50%;
   border-color: transparent;
   background-color: #a683e3;
   color: #fff;
   font-size: 30px;
-  padding-bottom: 6px;
   border-width: 0;
+  transition: 1ms;
+}
+button:hover {
+  font-size: 40px;
+  min-height: 55px;
+  width: 55px;
+  margin-right: 15px;
+  background-color: #753cd5;
 }
 
 input[type="text"] {
