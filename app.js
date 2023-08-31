@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const app = express();
+const _ = require("lodash");
 
 main().catch((err) => console.log(err));
 async function main() {
@@ -74,14 +75,25 @@ app.post("/", async (req, res) => {
   }
 });
 app.post("/delete", async (req, res) => {
-  console.log(req.body.checkbox);
-  const del = await Item.findByIdAndRemove(req.body.checkbox);
-  console.log(del);
-  res.redirect("/");
+  const today = date.getDate();
+  const title = req.body.listName;
+  console.log(req.body);
+  if (title === today) {
+    const del = await Item.findByIdAndRemove(req.body.checkbox);
+    console.log(del);
+    res.redirect("/");
+  } else {
+    let del = await List.findOneAndUpdate(
+      { name: title },
+      { $pull: { list: { _id: req.body.checkbox } } }
+    );
+    console.log("del:" + del);
+    res.redirect("/" + title);
+  }
 });
 
 app.get("/:listName", async (req, res) => {
-  const listName = req.params.listName;
+  const listName = _.capitalize(req.params.listName);
   let alreadyList = await List.findOne({ name: listName }).exec();
   if (alreadyList === null) {
     const newlist = new List({
