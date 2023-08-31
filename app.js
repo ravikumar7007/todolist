@@ -2,12 +2,16 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const app = express();
 const _ = require("lodash");
+dotenv.config();
 
 main().catch((err) => console.log(err));
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/todolistDB");
+  await mongoose.connect(
+    `mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.fby6xhd.mongodb.net/todoListDB?retryWrites=true&w=majority`
+  );
 }
 
 const date = require(__dirname + "/date.js");
@@ -109,6 +113,6 @@ app.get("/:listName", async (req, res) => {
   });
 });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log("Server is listening on port 3000");
 });
